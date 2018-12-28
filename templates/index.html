@@ -1,22 +1,33 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/html">
+<html>
 <head>
-<meta charset="utf-8">
+    <meta charset="utf-8">
     {% load staticfiles %}
-<title>Test Case</title>
-    <h1>hello world</h1>
+    <title>Test Case</title>
     <script src="{% static '/js/jquery.min.js' %}"></script>
     <script src="{% static '/js/vue.min.js' %}"></script>
 </head>
 <body>
+{% verbatim myblock %}
 <div id="app">
   <p>{{ message }}</p>
+    {{number}}
+    <button @click="add">add</button>
 </div>
-<strip>
+{% endverbatim myblock %}
+<script>
 new Vue({
-
-    }})
-
-</strip>
+    el: '#app',
+    data: {
+        message: 'hello, vue.js!',
+        number: 11
+    },
+    methods: {
+        add: function(){
+        this.number = this.number + 1
+        },
+    }
+})
+</script>
 </body>
 </html>
