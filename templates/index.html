@@ -37,6 +37,11 @@
     <div v-else>
         Not Sorry
     </div>
+    <br>
+    <p>你爱吃的水果:</p>
+    <div id="fruites" v-for="(items,index) in fruits">{{index}}:{{items.fruit}}</div>
+    <input id="add_fruite">
+    <button @click="addf">增加水果</button>
      <!--<label for="r1">修改颜色</label><input id="r1" type="checkbox" v-model="class1">-->
   <!--<br><br>-->
   <!--<div v-bind:class="{'class1': class1}">-->
@@ -57,13 +62,16 @@
         run: true,
         url:"http://www.baidu.com",
         number:11,
-        type:'C'
-
+        type:'C',
+        fruits:[{"fruit":"apple"},{"fruit":"orange"},{"fruit":"banana"}]
     },
     methods: {
         add: function(){
         this.number = this.number + 1
         },
+        addf:function(){
+
+        }
         reverseMessage:function () {
             this.message=this.message.split('').reverse().join('')
         }
