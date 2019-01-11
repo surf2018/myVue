@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    {% load staticfiles %}
+    <title>Hello</title>
+    <script src="{% static '/js/jquery.min.js' %}"></script>
+    <script src="{% static '/js/vue.min.js' %}"></script>
+</head>
+
+{% verbatim myblock %}
+<div id="app">
+    水果:<br>
+    <div>
+        <li v-for="(item, index) in fruits">{{ index }}-{{ item }}</li>
+    </div>
+    你爱吃的水果:<input v-model="fruits">
+
+
+</div>
+
+{% endverbatim myblock %}
+<script>
+    vm=new Vue({
+    el: '#app',
+    data: {
+        ok: true,
+        message: 'RUNOOB',
+        id: 1,
+        run: true,
+        url:"http://www.baidu.com",
+        number:11,
+        type:'C',
+        fruits:[{"fruit":"apple"},{"fruit":"orange"},{"fruit":"banana"}],
+        finfo:"",
+        firstName:"Alice",
+        LastName:"wang",
+        fullNameWatch:"",
+        checked:true,
+        checkedNames:[],
+        picked:'Google',
+        selected:"",
+        inputStr: '',
+        returnStr: ''
+    },
+    methods: {
+        add: function(){
+        this.number = this.number + 1
+        },
+        addf: function(){
+            this.fruits.push({"fruit":this.finfo})
+        },
+        reverseMessage:function () {
+            this.message=this.message.split('').reverse().join('')
+        },
+        fullname2:function () {
+            return this.firstName+this.LastName
+
+        },
+        send:function () {
+            $.ajax({
+                url: '/mypro/do/',
+                type: 'post',
+                data: {"val": this.inputStr},
+                success: function (ret) {
+                    console.log(ret)
+                    vm.returnStr=ret
+                    console.log(vm.returnStr)
+                },
+                error: function (ret) {
+                    console.log(ret.status)
+                }
+            })
+        }
+    },
+    computed:{
+        fullName:function(){
+            return this.firstName+this.LastName
+        }
+    },
+     watch:{
+        firstName:function (val) {
+            this.fullNameWatch=val+this.LastName
+
+        },
+        LastName: function (val) {
+            this.fullNameWatch=this.firstName+val
+
+        }
+     }
+})
+// document.write(vu.$data === data)
+// document.write(vu.$data.message)
+// document.write("<br>")
+// document.write(vu.$el)
+</script>
+
+</body>
+</html>

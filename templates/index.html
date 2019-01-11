@@ -13,19 +13,19 @@
   color: #eee;
 }
 </style>
-<body>
+<input>
 {% verbatim myblock %}
 <div id="app">
     {{ 5+5 }}<br>
     {{ ok? 'YES' : 'NO'}}<br>
     {{ message }}
     {{number}}
-    <div v-bind:id="'list_' + id">菜鸟教程</div>
+    <div :id="'list_' + id">菜鸟教程</div>
     <p v-if="run">你看到我了</p>
-    <a v-bind:href="url">百度</a>
-    <button v-on:click="add">点击</button>
+    <a :href="url">百度</a>
+    <button @click="add">点击</button>
     <input v-model="message">
-    <button v-on:click="reverseMessage">反向</button>
+    <button @click="reverseMessage">反向</button>
     <template v-if="ok">
         <h1>菜鸟教程</h1>
         <p>学的不仅是技术，更是梦想！</p>
@@ -39,21 +39,66 @@
     </div>
     <br>
     <p>你爱吃的水果:</p>
-    <div id="fruites" v-for="(items,index) in fruits">{{index}}:{{items.fruit}}</div>
-    <input id="add_fruite">
+    <div>
+        <li v-for="(item, index) in fruits">{{ index }}-{{ item.fruit }}</li>
+    </div>
+    <input id="add_fruite" v-model="finfo">
     <button @click="addf">增加水果</button>
-     <!--<label for="r1">修改颜色</label><input id="r1" type="checkbox" v-model="class1">-->
-  <!--<br><br>-->
-  <!--<div v-bind:class="{'class1': class1}">-->
-    <!--v-bind:class 指令-->
-  <!--</div>-->
-  <!--<p>{{ message }}</p>-->
-    <!--{{number}}-->
-    <!--<button @click="add">add</button>-->
+    <div>
+        firstName:{{firstName}} <br>
+        <input v-model="firstName"><br>
+        lastName:{{LastName}}<br>
+        <input v-model="LastName"><br>
+        fullName:{{fullName}}<br>
+        fullname2:{{fullname2()}}<br>
+        fullNameWatch:{{fullNameWatch}}
+    </div>
+------------------------------------
+    <p>单个复选框</p>
+    <input type="checkbox" id="checkbox1" v-model="checked">
+    <label for="checkbox1">{{checked}}</label>
+     <p>多个复选框：</p>
+  <input type="checkbox" id="runoob" value="Runoob" v-model="checkedNames">
+  <label for="runoob">Runoob</label>
+  <input type="checkbox" id="google" value="Google" v-model="checkedNames">
+  <label for="google">Google</label>
+  <input type="checkbox" id="taobao" value="Taobao" v-model="checkedNames">
+  <label for="taobao">taobao</label>
+  <br>
+  <span>选择的值为: {{ checkedNames }}</span><br>
+  --------------------------------------<br>
+    单选按钮<br>
+    <input type="radio" id="runoob1" value="Runoob" v-model="picked">
+  <label for="runoob">Runoob</label>
+  <br>
+  <input type="radio" id="google1" value="Google" v-model="picked">
+  <label for="google">Google</label>
+  <br>
+  <span>选中值为: {{ picked }}</span>
+    <br>
+    ---------------------------<br>
+    <select v-model="selected" name="fruit">
+    <option value="">选择一个网站</option>
+    <option value="www.runoob.com">Runoob</option>
+    <option value="www.google.com">Google</option>
+  </select>
+
+  <div id="output">
+      选择的网站是: {{selected}}
+  </div>
+    ------------------------------------<br>
+     fetch<br>
+    发送:{{ inputStr }}<br>
+    <input v-model="inputStr"><button @click="send">发送</button><br>
+    返回：{{ returnStr }}<br>
+    <input v-model="returnStr"><br>
+
+
 </div>
+
 {% endverbatim myblock %}
 <script>
-    new Vue({
+    vm=new Vue({
     el: '#app',
     data: {
         ok: true,
@@ -63,19 +108,64 @@
         url:"http://www.baidu.com",
         number:11,
         type:'C',
-        fruits:[{"fruit":"apple"},{"fruit":"orange"},{"fruit":"banana"}]
+        fruits:[{"fruit":"apple"},{"fruit":"orange"},{"fruit":"banana"}],
+        finfo:"",
+        firstName:"Alice",
+        LastName:"wang",
+        fullNameWatch:"",
+        checked:true,
+        checkedNames:[],
+        picked:'Google',
+        selected:"",
+        inputStr: '',
+        returnStr: ''
     },
     methods: {
         add: function(){
         this.number = this.number + 1
         },
-        addf:function(){
-
-        }
+        addf: function(){
+            this.fruits.push({"fruit":this.finfo})
+        },
         reverseMessage:function () {
             this.message=this.message.split('').reverse().join('')
+        },
+        fullname2:function () {
+            return this.firstName+this.LastName
+
+        },
+        send:function () {
+             var x = this;
+            $.ajax({
+                url: '/mypro/do/',
+                type: 'post',
+                data: {"val": this.inputStr},
+                success: function (ret) {
+                    console.log(ret)
+                    x.returnStr = ret;
+                    console.log(vm.returnStr)
+                },
+                error: function (ret) {
+                    console.log(ret.status)
+                }
+            })
         }
-    }
+    },
+    computed:{
+        fullName:function(){
+            return this.firstName+this.LastName
+        }
+    },
+     watch:{
+        firstName:function (val) {
+            this.fullNameWatch=val+this.LastName
+
+        },
+        LastName: function (val) {
+            this.fullNameWatch=this.firstName+val
+
+        }
+     }
 })
 // document.write(vu.$data === data)
 // document.write(vu.$data.message)
