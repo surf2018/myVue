@@ -10,12 +10,18 @@
 
 {% verbatim myblock %}
 <div id="app">
-    水果:<br>
+    新增水果：<input v-model="addfruit"><button @click="add">增加</button><br>
+    水果超市:<br>
     <div>
         <li v-for="(item, index) in fruits">{{ index }}-{{ item }}</li>
     </div>
-    你爱吃的水果:<input v-model="fruits">
-
+    你爱吃的水果:<input type="text" v-model="se" placeholder="search"><br>
+    <input type="radio" id="radio1" value="顺序" v-model="picked" @click="reverseMessage">
+    <label for="radio1">顺序</label>
+    <input type="radio" id="radio2" value="倒序" v-model="picked" @click="reverseMessage">
+    <label for="radio2">倒序</label>
+  <br>
+    <div v-for="fruit in searchFruits">{{ fruit }}</div>
 
 </div>
 
@@ -24,38 +30,20 @@
     vm=new Vue({
     el: '#app',
     data: {
-        ok: true,
-        message: 'RUNOOB',
-        id: 1,
-        run: true,
-        url:"http://www.baidu.com",
-        number:11,
-        type:'C',
-        fruits:[{"fruit":"apple"},{"fruit":"orange"},{"fruit":"banana"}],
-        finfo:"",
-        firstName:"Alice",
-        LastName:"wang",
-        fullNameWatch:"",
-        checked:true,
-        checkedNames:[],
-        picked:'Google',
-        selected:"",
-        inputStr: '',
-        returnStr: ''
+        fruits:["apple","orange","fruit","banana","lemon","grape"],
+        addfruit:"",
+        se:'',
+        picked:"顺序",
     },
     methods: {
         add: function(){
-        this.number = this.number + 1
+        this.fruits.push(this.addfruit)
         },
         addf: function(){
             this.fruits.push({"fruit":this.finfo})
         },
         reverseMessage:function () {
-            this.message=this.message.split('').reverse().join('')
-        },
-        fullname2:function () {
-            return this.firstName+this.LastName
-
+            this.se=this.se.split('').reverse().join('')
         },
         send:function () {
             $.ajax({
@@ -73,20 +61,22 @@
             })
         }
     },
-    computed:{
-        fullName:function(){
-            return this.firstName+this.LastName
+    computed: {
+        searchFruits: function () {
+            var se = this.se;
+            var lastF = [];
+            if (se) {
+                for (var i = 0; i < this.fruits.length; i++) {
+                    if (this.fruits[i].search(se)!=-1) {
+                        lastF.push(this.fruits[i]);
+                    }
+                }
+                console.log(lastF)
+                return lastF
+            }
         }
     },
      watch:{
-        firstName:function (val) {
-            this.fullNameWatch=val+this.LastName
-
-        },
-        LastName: function (val) {
-            this.fullNameWatch=this.firstName+val
-
-        }
      }
 })
 // document.write(vu.$data === data)
