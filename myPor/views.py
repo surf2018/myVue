@@ -15,3 +15,5 @@ def returnR(request):
         print("received data:"+datas)
         r="hello word!"
         return HttpResponse(r)
+def login(request):
+    return render(request,"Login.html")

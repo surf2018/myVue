@@ -23,4 +23,5 @@ urlpatterns = [
     path('main/',views.index),
     path('do/',views.returnR),
     path('search/',views.search),
+    path('login/',views.login),
 ]
