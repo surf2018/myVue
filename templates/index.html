@@ -93,11 +93,23 @@
     返回：{{ returnStr }}<br>
     <input v-model="returnStr"><br>
 
-
+--------全局注册-------------<br>
+    <soffee></soffee>
+    -------------局部注册----<br>
+    <shu></shu>
 </div>
 
 {% endverbatim myblock %}
 <script>
+    //全局register
+    Vue.component('soffee',{
+        template: '<h1>soffee自定义全局注册组件</h1>'
+    })
+
+    //局部注册组件
+    var Child = {
+        template: '<h1>shu局部注册组件</h1>'
+    }
     vm=new Vue({
     el: '#app',
     data: {
@@ -120,6 +132,9 @@
         inputStr: '',
         returnStr: ''
     },
+        components:{
+        'shu':Child
+        },
     methods: {
         add: function(){
         this.number = this.number + 1

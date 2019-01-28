@@ -24,4 +24,6 @@ urlpatterns = [
     path('do/',views.returnR),
     path('search/',views.search),
     path('login/',views.login),
+    path('submit/',views.submit),
+    path('component/',views.component),
 ]

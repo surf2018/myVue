@@ -6,108 +6,85 @@
 
     <!-- 引入样式 -->
 <link rel="stylesheet" href="https://unpkg.com/element-ui/lib/theme-chalk/index.css">
+     <style>
+        #app{
+            width: 500px;
+            margin: 0 auto;
+        }
+    </style>
 <!-- 引入组件库 -->
-<script src="https://unpkg.com/element-ui/lib/index.js"></script>
+
     <!-- import Vue before Element -->
-  <script src="https://unpkg.com/vue/dist/vue.js"></script>
+  <script src="{% static '/js/vue.min.js' %}"></script>
+    <script src="https://unpkg.com/element-ui/lib/index.js"></script>
      <script src="{% static '/js/jquery.min.js' %}"></script>
 
 <head>
    <title>Login</title>
 </head>
 
+<body>
 {% verbatim myblock %}
+
 <div id="app">
-<<el-form :model="LoginForm" :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
+    <h1 class="head1">Login</h1>
+<el-form :model="LoginForm" :rules="rules" ref="LoginForm" label-width="100px" class="demo-ruleForm">
   <el-form-item label="username" prop="username">
-    <el-input v-model="LoginForm.username"></el-input>
+    <el-input v-model="LoginForm.username" placeholder="请输入用户名"></el-input>
   </el-form-item>
      <el-form-item label="password" prop="password">
-    <el-input type="password" v-model="LoginForm.password"></el-input>
+    <el-input type="password" v-model="LoginForm.password" placeholder="请输入密码"></el-input>
   </el-form-item>
   <el-form-item>
-    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+    <el-button type="primary" @click="submitForm">登录</el-button>
   </el-form-item>
 </el-form>
 </div>
 {% endverbatim myblock %}
+
 <script>
-    vm=new Vue({
-    el: '#app',
-    data: {
-        LoginForm: {
-          username: '',
-          password: '',
+    new Vue({
+        el:'#app',
+        data:{
+                LoginForm: {
+                    username: '',
+                    password: '',
+                },
+                rules: {
+                    username: [
+                        {required: true, message: '请输入用户名', trigger: 'blur'},
+                        {min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur'}
+                    ],
+                    password: [
+                        {required: true, message: '请输入密码', trigger: 'change'},
+                        {min: 3, max: 5, message: '长度在 3 到 22 个字符', trigger: 'change'}
+                    ]
+                }
         },
-         rules: {
-          name: [
-            { required: true, message: '请输入用户名', trigger: 'blur' },
-            { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
-          ],
-          password: [
-            { required: true, message: '请选择活动区域', trigger: 'change' }
-          ],
-          date1: [
-            { type: 'date', required: true, message: '请选择日期', trigger: 'change' }
-          ],
-          date2: [
-            { type: 'date', required: true, message: '请选择时间', trigger: 'change' }
-          ],
-          type: [
-            { type: 'array', required: true, message: '请至少选择一个活动性质', trigger: 'change' }
-          ],
-          resource: [
-            { required: true, message: '请选择活动资源', trigger: 'change' }
-          ],
-          desc: [
-            { required: true, message: '请填写活动形式', trigger: 'blur' }
-          ]
-        }
-    },
-    methods: {
-        add: function(){
-        this.fruits.push(this.addfruit)
-        },
-        addf: function(){
-            this.fruits.push({"fruit":this.finfo})
-        },
-        reverseMessage:function () {
-            this.se=this.se.split('').reverse().join('')
-        },
-        send:function () {
+        methods: {
+           submitForm:function() {
+             console.log("submit");
             $.ajax({
-                url: '/mypro/do/',
+                url: '/mypro/submit/',
                 type: 'post',
-                data: {"val": this.inputStr},
+                data: {"userinfo":JSON.stringify(this.LoginForm)},
                 success: function (ret) {
                     console.log(ret)
-                    vm.returnStr=ret
-                    console.log(vm.returnStr)
+                    if(ret.message=="success"){
+                        alert("登录成功")
+                    }
+                    else{
+                        alert("登录失败")
+                    }
+
                 },
                 error: function (ret) {
-                    console.log(ret.status)
+                    console.log(ret)
                 }
             })
-        }
-    },
-    computed: {
-        searchFruits: function () {
-            var se = this.se;
-            var lastF = [];
-            if (se) {
-                for (var i = 0; i < this.fruits.length; i++) {
-                    if (this.fruits[i].search(se)!=-1) {
-                        lastF.push(this.fruits[i]);
-                    }
-                }
-                console.log(lastF)
-                return lastF
             }
-        }
-    },
-     watch:{
-     }
-})
+       }
+    })
 // document.write(vu.$data === data)
 // document.write(vu.$data.message)
 // document.write("<br>")
